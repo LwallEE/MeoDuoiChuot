@@ -13,6 +13,7 @@ public class Mouse : BaseAnimal
    private float Distance_Run = 2f;
    private Vector2 targetPoint;
 
+   private bool isChase;
    private void Awake()
    {
       cat = FindObjectOfType<Cat>();
@@ -21,7 +22,31 @@ public class Mouse : BaseAnimal
    private void FixedUpdate()
    {
       if (!isMoving) return;
-      MoveToTargetPoint();
+      if (goal.gameObject.activeInHierarchy)
+      {
+         MoveToGoal();
+      }
+      else
+      {
+         MoveToTargetPoint();
+      }
+   }
+
+   public override void StartMove()
+   {
+      base.StartMove();
+      Initial();
+   }
+
+   public void Initial()
+   {
+      targetPoint = Tf.position;
+   }
+   void MoveToGoal()
+   {
+      CheckFlip(goal.position.x);
+      var direction = (goal.position - Tf.position).normalized;
+      Tf.position += (Vector3)direction * (speed * Time.deltaTime);
    }
 
    void MoveToTargetPoint()
@@ -48,7 +73,20 @@ public class Mouse : BaseAnimal
       return CameraController.Instance.ClampInsideScreen(result);
    }
 
-  
+   public void SetIsChase(bool value)
+   {
+      isChase = value;
+   }
 
-  
+   private void OnTriggerEnter2D(Collider2D other)
+   {
+      if (other.CompareTag("Cat") && isChase)
+      {
+         GameManager.Instance.GameLose();
+      }
+      else if (other.CompareTag("Goal"))
+      {
+         GameManager.Instance.GameWin();
+      }
+   }
 }

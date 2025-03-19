@@ -28,16 +28,16 @@ public class CameraController : Singleton<CameraController>
         return vt.x > UpperLeftPos.x && vt.x <= LowerRightPos.x && vt.y >= LowerRightPos.y && vt.y <= UpperLeftPos.y;
     }
 
-    public Vector2 ClampInsideScreen(Vector2 pos)
+    public Vector2 ClampInsideScreen(Vector2 pos,float offset = 0)
     {
-        float clampX = Mathf.Clamp(pos.x, UpperLeftPos.x, LowerRightPos.x);
-        float clampY = Mathf.Clamp(pos.y, LowerRightPos.y, UpperLeftPos.y);
+        float clampX = Mathf.Clamp(pos.x, UpperLeftPos.x+offset, LowerRightPos.x-offset);
+        float clampY = Mathf.Clamp(pos.y, LowerRightPos.y+offset, UpperLeftPos.y-offset);
         return new Vector2(clampX, clampY);
     }
 
-    public Vector2 GetRandomPositionInsideScreen()
+    public Vector2 GetRandomPositionInsideScreen(float offset = 0)
     {
-        return new Vector2(Random.Range(UpperLeftPos.x, LowerRightPos.x),
-            Random.Range(LowerRightPos.y, UpperLeftPos.y));
+        return new Vector2(Random.Range(UpperLeftPos.x+offset, LowerRightPos.x-offset),
+            Random.Range(LowerRightPos.y+offset, UpperLeftPos.y-offset));
     }
 }

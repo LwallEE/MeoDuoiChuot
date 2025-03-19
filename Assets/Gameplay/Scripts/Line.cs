@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using ReuseSystem.AudioSystem;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -19,7 +20,7 @@ public class Line : MonoBehaviour
     [SerializeField] private CircleCollider2D centerCollider2D;
 
     [SerializeField] private float lengthTest;
-    
+    [SerializeField] private float offsetScreen;
     private void Update()
     {
         CheckInput();
@@ -34,12 +35,15 @@ public class Line : MonoBehaviour
             {
                 if (centerCollider2D.OverlapPoint(mousePos))
                 {
-                    Debug.Log("Correct");
+                    GameController.Instance.ChooseCorrect();
+                    AudioManager.Instance.PlayClip(SoundConstant.Correct_Click);
                 }
                 else
                 {
-                    Debug.Log("Incorrect");
+                    AudioManager.Instance.PlayClip(SoundConstant.Incorrect_Click);
+                    GameController.Instance.IncorrectChoose();
                 }
+                
             }
         }
     }
@@ -74,12 +78,12 @@ public class Line : MonoBehaviour
 
     public void GenerateRandomLine(float length)
     {
-        Vector2 dau = CameraController.Instance.GetRandomPositionInsideScreen();
+        Vector2 dau = CameraController.Instance.GetRandomPositionInsideScreen(offsetScreen);
 
         float cuoi_x = dau.x + Random.Range(-length, length);
         float cuoi_y = Mathf.Sqrt(length * length - Mathf.Pow(cuoi_x - dau.x, 2)) + dau.y;
 
-        Vector2 cuoi = CameraController.Instance.ClampInsideScreen(new Vector2(cuoi_x, cuoi_y));
+        Vector2 cuoi = CameraController.Instance.ClampInsideScreen(new Vector2(cuoi_x, cuoi_y),offsetScreen);
 
         startPoint.position = dau;
         endPoint.position = cuoi;

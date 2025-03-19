@@ -37,7 +37,7 @@ public class BaseAnimal : MonoBehaviour
         isMoving = false;
     }
 
-    public void StartMove()
+    public virtual void StartMove()
     {
         isMoving = true;
     }

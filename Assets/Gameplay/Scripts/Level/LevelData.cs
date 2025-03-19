@@ -8,6 +8,6 @@ namespace Gameplay.Scripts.Level
         public float timeToFinish;
         public float lineLength;
         public int attemptToWin;
-        
+        public int incorrectTimes;
     }
 }
